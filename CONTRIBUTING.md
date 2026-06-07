@@ -45,6 +45,27 @@ The mode is set by the user at profile setup and passed through the pipeline. Ch
 
 ---
 
+## Branch Strategy
+
+```
+main  (stable, production only)
+ |
+ +-- dev  (active development - all features merge here)
+      |
+      +-- feature/issue-1-dev-environment
+      +-- feature/issue-6-lever-scraper
+      +-- feature/issue-9-embedding-pipeline
+      ...
+```
+
+**main** - only receives merges from dev at the end of a completed milestone. Never push directly to main.
+
+**dev** - the working branch. All feature branches are created from dev and merged back to dev via PR.
+
+**feature/issue-N-short-name** - your personal working branch. One per issue.
+
+---
+
 ## Workflow
 
 ### Step 1 - Find your issue
@@ -54,7 +75,7 @@ Go to the Issues tab, find an open issue in your assigned milestone (M1 to M8). 
 Comment "I am working on this" on the issue. The Maintainer will assign it to you.
 
 ### Step 3 - Create a branch
-Always branch off `main`. Use this naming convention:
+Always branch off `dev`, never off `main`. Use this naming convention:
 
 ```
 feature/m2-lever-scraper
@@ -63,9 +84,9 @@ docs/m1-db-schema
 ```
 
 ```bash
-git checkout main
-git pull origin main
-git checkout -b feature/m2-lever-scraper
+git checkout dev
+git pull origin dev
+git checkout -b feature/issue-6-lever-scraper
 ```
 
 ### Step 4 - Build
