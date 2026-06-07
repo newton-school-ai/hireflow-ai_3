@@ -156,7 +156,7 @@ User uploads their master resume or fills a structured profile. System extracts 
 | `preferred_locations` | list | ["Bangalore", "Remote", "Pune"] |
 | `min_stipend` | int | 15000 |
 | `weekly_quota` | int | 10 |
-| `auto_apply` | bool | true / false (if false, confirm before each apply) |
+| `confirmation_mode` | string | "batch" (confirm all at once) or "individual" (confirm each one separately) - default "batch" |
 
 **How profile is used downstream:**
 - **Job Matching:** Profile embedding compared against JD embeddings
@@ -251,8 +251,10 @@ User says "10 per week." System picks top 10 from the ranked list and generates 
 1. Sort all jobs by `match_score` descending
 2. Apply filters: exclude already-applied companies, expired listings, user blacklist
 3. Pick top N (N = weekly quota)
-4. If `auto_apply = false`: send the list to user for confirmation before proceeding
-5. If `auto_apply = true`: proceed directly to resume tailoring + application
+4. Always send the weekly plan to the user for review - confirmation is mandatory, not optional
+5. User confirms the full batch ("batch" mode) or approves each listing individually ("individual" mode)
+6. After plan confirmation, generate tailored resumes and show each one to the user before submitting
+7. Only after resume approval does the agent proceed to submit the application
 
 **Weekly Application Plan (sent to user before execution):**
 
@@ -774,7 +776,7 @@ CREATE TABLE users (
     preferred_locations TEXT[],
     min_stipend INTEGER,
     weekly_quota INTEGER DEFAULT 10,
-    auto_apply BOOLEAN DEFAULT FALSE,
+    confirmation_mode VARCHAR(20) DEFAULT 'batch',  -- 'batch' or 'individual'
     created_at TIMESTAMP
 );
 

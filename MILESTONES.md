@@ -157,8 +157,12 @@ Two connected components: (1) the quota selector that picks the top N listings f
 Quota Selector:
 - [ ] Takes ranked listing list and user weekly_quota, returns top N listings
 - [ ] Filters out: already-applied companies, expired listings, user blacklist
-- [ ] If auto_apply = false, returns the list to the user for confirmation before proceeding
-- [ ] Weekly application plan generated (structured list of top N with match scores and key gaps)
+- [ ] Always generates a weekly plan and sends it to the user for review before any application is submitted - this is not optional
+- [ ] Weekly plan shows: company, role, match score, skill gaps, and the resume that will be used
+- [ ] User can confirm the full batch, swap individual listings, or remove any company
+- [ ] `confirmation_mode` field in user profile controls granularity: "batch" (confirm all at once) or "individual" (confirm each one separately) - default is "batch"
+- [ ] No resume is generated and no application is submitted until the user confirms
+- [ ] After confirmation, generates tailored resumes and shows each one to the user before submitting
 
 Resume Tailoring Engine:
 - [ ] For each selected listing: extracts required skills from JD, maps to user matching skills and projects
@@ -183,6 +187,8 @@ Resume Tailoring Engine:
 3. What happens when a user has zero projects that match the JD requirements?
 4. The user weekly quota is 10 but only 7 listings pass the quality threshold. What does the system do?
 5. How does the resume summary change between Internship Mode and Job Mode for the same user?
+6. The user confirms the weekly plan but then wants to change one company after resumes are already generated. How do you handle this?
+7. Why should confirmation always be required even if the user previously said "auto-apply"? What could go wrong if you skip it?
 
 ---
 
@@ -323,7 +329,9 @@ Build the React frontend dashboard and complete the end-to-end integration of al
 
 Frontend Dashboard:
 - [ ] Mode switcher: user can toggle between Internship Mode and Job Mode
-- [ ] Weekly plan view: shows top N selected listings with match scores, skill gaps, confirm or edit before applying
+- [ ] Weekly plan view: shows top N selected listings with match scores, skill gaps, and planned resume - user must confirm before agent proceeds
+- [ ] Plan review actions: confirm full batch, swap a listing, remove a company, or edit the resume for a specific listing
+- [ ] Resume preview: user can view each tailored resume before it is submitted, with option to edit or reject
 - [ ] Application tracker: table of all applications with status (applied, failed, needs action), match score, resume link
 - [ ] Prep guide viewer: per-application prep guide display (topics, resources, mock questions, company intel)
 - [ ] Resume viewer: list of all tailored resumes with download links

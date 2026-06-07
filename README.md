@@ -18,9 +18,12 @@ You tell HireFlow:
 HireFlow then:
 1. Discovers 100+ relevant openings from career pages and portals
 2. Scores every listing against your profile and picks the best matches
-3. Tailors your resume specifically for each role (a different resume per company)
-4. Applies automatically using form-filling automation
-5. Sends you a weekly report with every resume used and a prep guide for each company
+3. Sends you a weekly plan - "here are your top 10, review before we proceed"
+4. You confirm, swap, or remove any listing. Nothing is submitted without your approval.
+5. Tailors your resume specifically for each confirmed role (a different resume per company)
+6. Shows you each tailored resume before it is sent - you can edit or reject
+7. Applies to all confirmed listings using form-filling automation
+8. Sends you a weekly report with every resume used and a prep guide for each company
 
 It also works in reverse - companies can use HireFlow to shortlist the best applicants from a pile of 100+ resumes.
 
