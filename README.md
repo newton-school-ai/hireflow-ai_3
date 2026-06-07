@@ -49,7 +49,7 @@ The user selects a mode at profile setup. Both modes use the same core pipeline 
 | What | Tool |
 |------|------|
 | Agent Orchestration | LangGraph |
-| LLM | Claude or OpenAI API |
+| LLM | Groq (free), Gemini (free), Ollama (local), OpenAI or Anthropic (paid) |
 | Web Scraping | Playwright and BeautifulSoup |
 | Vector Matching | FAISS and Sentence Transformers |
 | Backend API | FastAPI |

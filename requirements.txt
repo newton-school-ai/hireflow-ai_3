@@ -11,10 +11,17 @@ langgraph>=0.1.0
 langchain>=0.2.0
 langchain-openai>=0.1.0
 langchain-anthropic>=0.1.0
+langchain-groq>=0.1.0
+langchain-google-genai>=1.0.0
 
-# --- LLM Providers ---
+# --- LLM Providers (pick one - see .env.example) ---
+# Paid: OpenAI and Anthropic
 openai>=1.30.0
 anthropic>=0.28.0
+# Free: Groq (recommended for students) and Google Gemini
+groq>=0.9.0
+google-generativeai>=0.7.0
+# Free local: Ollama needs no package - install from https://ollama.com
 
 # --- Web Scraping ---
 playwright>=1.44.0
