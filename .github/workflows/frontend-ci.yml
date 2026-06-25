@@ -1,0 +1,60 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - "frontend/**"
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check for frontend package
+        id: package
+        run: |
+          if [ -f frontend/package.json ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install frontend dependencies
+        if: steps.package.outputs.exists == 'true'
+        working-directory: frontend
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run Vitest
+        if: steps.package.outputs.exists == 'true'
+        working-directory: frontend
+        run: |
+          if node -e "const p=require('./package.json'); process.exit((p.dependencies?.vitest || p.devDependencies?.vitest) ? 0 : 1)"; then
+            npx vitest run
+          else
+            echo "Vitest is not configured; skipping."
+          fi
+
+      - name: Run frontend build
+        if: steps.package.outputs.exists == 'true'
+        working-directory: frontend
+        run: |
+          if node -e "const p=require('./package.json'); process.exit(p.scripts?.build ? 0 : 1)"; then
+            npm run build
+          else
+            echo "Build script is not configured; skipping."
+          fi
