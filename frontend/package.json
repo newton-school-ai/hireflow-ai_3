@@ -1,9 +1,10 @@
 {
   "name": "hireflow-frontend",
   "version": "1.0.0",
+  "description": "Frontend scaffold for HireFlow AI",
   "private": true,
   "scripts": {
-    "test": "echo 'No tests yet'",
-    "build": "echo 'No build yet'"
+    "test": "echo \"No frontend tests specified yet\"",
+    "build": "echo \"No frontend build specified yet\""
   }
 }
