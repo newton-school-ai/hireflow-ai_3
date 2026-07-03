@@ -13,6 +13,7 @@ class UserMode(str, enum.Enum):
 class ConfirmationMode(str, enum.Enum):
     manual = "manual"
     auto = "auto"
+    batch = "batch"
 
 class User(Base):
     __tablename__ = "users"
