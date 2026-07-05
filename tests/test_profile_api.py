@@ -3,36 +3,34 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.dialects.postgresql import JSONB
 
 from src.api.main import app
-from src.config.database import Base, get_db
-from src.config.settings import settings
-from src.models.user import User, UserMode, ConfirmationMode
+from src.config.database import get_db
+from src.models import Base, User, UserMode, ConfirmationMode
 
-# Setup test DB using PostgreSQL (same connection as development settings)
-engine = create_engine(settings.DATABASE_URL)
+from sqlalchemy.pool import StaticPool
+
+# Custom compiler directive to allow SQLite to handle Postgres JSONB columns
+@compiles(JSONB, "sqlite")
+def compile_jsonb_sqlite(type_, compiler, **kw):
+    return "JSON"
+
+# Setup in-memory SQLite database with StaticPool to persist tables across connections
+SQLALCHEMY_DATABASE_URL = "sqlite://"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, 
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 @pytest.fixture(scope="function", autouse=True)
-def cleanup_users():
-    # Clean up test users before and after test execution to prevent collisions
-    db = TestingSessionLocal()
-    db.query(User).filter(User.email.in_([
-        "john@example.com", 
-        "jane@example.com", 
-        "extracted@example.com"
-    ])).delete(synchronize_session=False)
-    db.commit()
-    db.close()
+def setup_db():
+    Base.metadata.create_all(bind=engine)
     yield
-    db = TestingSessionLocal()
-    db.query(User).filter(User.email.in_([
-        "john@example.com", 
-        "jane@example.com", 
-        "extracted@example.com"
-    ])).delete(synchronize_session=False)
-    db.commit()
-    db.close()
+    Base.metadata.drop_all(bind=engine)
 
 def override_get_db():
     try:
@@ -78,7 +76,7 @@ def test_create_profile_json_invalid_mode():
     assert "Invalid mode" in response.json()["detail"]
 
 def test_get_profile_not_found():
-    response = client.get("/profile/999999")
+    response = client.get("/profile/999")
     assert response.status_code == 404
     assert response.json()["detail"] == "User profile not found"
 
