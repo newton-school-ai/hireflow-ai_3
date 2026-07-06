@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Text, ForeignKey, DateTime, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -12,7 +12,7 @@ class PrepGuide(Base):
     application_id = Column(Integer, ForeignKey("applications.id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
     
     content = Column(Text, nullable=True) # Full text or markdown of the prep guide
-    structured_data = Column(JSONB, nullable=True) # E.g., specific interview questions, topics
+    structured_data = Column(JSONB().with_variant(JSON(), "sqlite"), nullable=True) # E.g., specific interview questions, topics
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

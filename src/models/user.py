@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Enum, DateTime
+from sqlalchemy import Column, Integer, String, Enum, DateTime, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -11,8 +11,8 @@ class UserMode(str, enum.Enum):
     job = "job"
 
 class ConfirmationMode(str, enum.Enum):
-    manual = "manual"
-    auto = "auto"
+    batch = "batch"
+    individual = "individual"
 
 class User(Base):
     __tablename__ = "users"
@@ -21,9 +21,9 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     mode = Column(Enum(UserMode), nullable=False, default=UserMode.job)
-    master_profile = Column(JSONB, nullable=True)
+    master_profile = Column(JSONB().with_variant(JSON(), "sqlite"), nullable=True)
     weekly_quota = Column(Integer, nullable=False, default=50)
-    confirmation_mode = Column(Enum(ConfirmationMode), nullable=False, default=ConfirmationMode.manual)
+    confirmation_mode = Column(Enum(ConfirmationMode), nullable=False, default=ConfirmationMode.batch)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     # Relationships

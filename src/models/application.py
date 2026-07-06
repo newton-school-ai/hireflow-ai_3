@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Enum, JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
@@ -21,7 +21,7 @@ class Application(Base):
     job_id = Column(Integer, ForeignKey("jobs.id", ondelete="CASCADE"), nullable=False, index=True)
     
     match_score = Column(Float, nullable=True)
-    skill_gaps = Column(JSONB, nullable=True)
+    skill_gaps = Column(JSONB().with_variant(JSON(), "sqlite"), nullable=True)
     resume_path = Column(String, nullable=True)
     status = Column(Enum(ApplicationStatus), nullable=False, default=ApplicationStatus.pending)
     
