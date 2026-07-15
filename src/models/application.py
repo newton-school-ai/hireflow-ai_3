@@ -18,7 +18,7 @@ class Application(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    job_id = Column(Integer, ForeignKey("jobs.id", ondelete="CASCADE"), nullable=False, index=True)
+    listing_id = Column(Integer, ForeignKey("listings.id", ondelete="CASCADE"), nullable=False, index=True)
     
     match_score = Column(Float, nullable=True)
     skill_gaps = Column(JSONB().with_variant(JSON(), "sqlite"), nullable=True)
@@ -30,8 +30,8 @@ class Application(Base):
 
     # Relationships
     user = relationship("User", back_populates="applications")
-    job = relationship("Job", back_populates="applications")
+    listing = relationship("Listing", back_populates="applications")
     prep_guide = relationship("PrepGuide", back_populates="application", uselist=False, cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Application(user_id={self.user_id}, job_id={self.job_id}, status={self.status})>"
+        return f"<Application(user_id={self.user_id}, listing_id={self.listing_id}, status={self.status})>"
