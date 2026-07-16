@@ -261,11 +261,21 @@ def test_jobs(lever_jobs):
         assert job.source in ["lever", "greenhouse"]
 
 def test_save_to_db(lever_jobs):
+    from src.models import Base
+    from src.config.database import engine
+    
+    # Create tables for the test database
+    Base.metadata.create_all(bind=engine)
+    
     jobs = lever_jobs
     from src.scrapers.db_utils import save_listings_to_db
-    saved_count = save_listings_to_db(jobs)
-    assert saved_count == len(jobs)
-    print(saved_count)
+    try:
+        saved_count = save_listings_to_db(jobs)
+        assert saved_count == len(jobs)
+        print(saved_count)
+    finally:
+        # Clean up after the test
+        Base.metadata.drop_all(bind=engine)
 
 
 
