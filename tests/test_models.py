@@ -1,11 +1,11 @@
 import pytest
 from sqlalchemy import MetaData
-from src.models import Base, User, Job, Application, PrepGuide, WeeklyReport
+from src.models import Base, User, Listing, Application, PrepGuide, WeeklyReport
 
 def test_tables_exist():
     tables = Base.metadata.tables.keys()
     assert "users" in tables
-    assert "jobs" in tables
+    assert "listings" in tables
     assert "applications" in tables
     assert "prep_guides" in tables
     assert "weekly_reports" in tables
@@ -17,15 +17,15 @@ def test_users_table_columns():
     for col in expected:
         assert col in user_columns
 
-def test_jobs_table_columns():
-    job_columns = Base.metadata.tables["jobs"].columns.keys()
-    expected = ["id", "title", "company", "location", "description", "url", "posted_date", "listing_type", "is_spam", "spam_confidence", "created_at"]
+def test_listings_table_columns():
+    listing_columns = Base.metadata.tables["listings"].columns.keys()
+    expected = ["id", "company_name", "role_title", "jd_text", "location", "application_url", "posted_date", "listing_type", "source", "created_at"]
     for col in expected:
-        assert col in job_columns
+        assert col in listing_columns
 
 def test_applications_table_columns():
     app_columns = Base.metadata.tables["applications"].columns.keys()
-    expected = ["id", "user_id", "job_id", "match_score", "skill_gaps", "resume_path", "status", "created_at", "updated_at"]
+    expected = ["id", "user_id", "listing_id", "match_score", "skill_gaps", "resume_path", "status", "created_at", "updated_at"]
     for col in expected:
         assert col in app_columns
 

@@ -238,13 +238,18 @@
 from src.scrapers.lever_scraper import lever
 from src.scrapers.greenhouse_scraper import greenhouse
 from src.models.Listing import Listing
-scraper = lever(
-    "employ",
-    "https://jobs.lever.co/employ"
-)
+import pytest
 
-jobs = scraper.scrape()
-def test_jobs():
+@pytest.fixture(scope="module")
+def lever_jobs():
+    scraper = lever(
+        "employ",
+        "https://jobs.lever.co/employ"
+    )
+    return scraper.scrape()
+
+def test_jobs(lever_jobs):
+    jobs = lever_jobs
     assert isinstance(jobs , list )
     assert len(jobs) > 0 
     for job in jobs : 
@@ -255,7 +260,8 @@ def test_jobs():
         assert job.jd_text
         assert job.source in ["lever", "greenhouse"]
 
-def test_save_to_db():
+def test_save_to_db(lever_jobs):
+    jobs = lever_jobs
     from src.scrapers.db_utils import save_listings_to_db
     saved_count = save_listings_to_db(jobs)
     assert saved_count == len(jobs)
@@ -266,8 +272,7 @@ def test_save_to_db():
 
 # def test_greenhouse_returns_list(): 
 if __name__ == "__main__":
-    test_jobs()
-    test_save_to_db()
+    pytest.main([__file__])
 
 
 # def test_listing_schema(): 
