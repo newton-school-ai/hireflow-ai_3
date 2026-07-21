@@ -1,6 +1,6 @@
 from src.config.database import Base
 from src.models.user import User, UserMode, ConfirmationMode
-from src.models.job import Job, ListingType
+from src.models.Listing import Listing, ListingType
 from src.models.application import Application, ApplicationStatus
 from src.models.prep_guide import PrepGuide
 from src.models.report import WeeklyReport
@@ -11,7 +11,7 @@ __all__ = [
     "User",
     "UserMode",
     "ConfirmationMode",
-    "Job",
+    "Listing",
     "ListingType",
     "Application",
     "ApplicationStatus",
