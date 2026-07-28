@@ -271,7 +271,7 @@ class GreenhouseScraper:
 
                 # Phase 1: Collect all postings across paginated pages
                 while True:
-                    page.goto(current_url, wait_until="networkidle")
+                    page.goto(current_url, wait_until="domcontentloaded")
                     listing_html = page.content()
                     page_postings = parse_listing_page(
                         listing_html, current_url
@@ -296,7 +296,7 @@ class GreenhouseScraper:
                     detail_page = context.new_page()
                     try:
                         detail_page.goto(
-                            posting["detail_url"], wait_until="networkidle"
+                            posting["detail_url"], wait_until="domcontentloaded"
                         )
                         detail_html = detail_page.content()
                         detail_data = parse_detail_page(detail_html)

@@ -209,7 +209,7 @@ class LeverScraper:
             )
             try:
                 page = context.new_page()
-                page.goto(self.url, wait_until="networkidle")
+                page.goto(self.url, wait_until="domcontentloaded")
                 listing_html = page.content()
 
                 # Parse listing page to get all posting metadata
@@ -226,7 +226,7 @@ class LeverScraper:
                     detail_page = context.new_page()
                     try:
                         detail_page.goto(
-                            posting["detail_url"], wait_until="networkidle"
+                            posting["detail_url"], wait_until="domcontentloaded"
                         )
                         detail_html = detail_page.content()
                         detail_data = parse_detail_page(detail_html)
