@@ -748,3 +748,57 @@ class TestEndToEnd:
         assert job.description  # non-empty
         assert job.url  # non-empty
         assert job.listing_type in (ListingType.job, ListingType.internship)
+
+# ============================================================
+# Generic Scraper Tests
+# ============================================================
+
+from src.scrapers.generic_scraper import is_dynamic_page, GenericScraper
+from src.scrapers.static_scraper import clean_html
+
+class TestGenericScraperAutoDetect:
+    def test_auto_detect_static(self):
+        long_text = "This is a very long text block that exists on a static career page. " * 10
+        html = f"<html><body><h1>Jobs</h1><p>{long_text}</p><ul><li>SWE</li></ul></body></html>"
+        assert is_dynamic_page(html) is False
+
+    def test_auto_detect_dynamic_short_text(self):
+        html = "<html><body><script>runApp();</script></body></html>"
+        assert is_dynamic_page(html) is True
+
+    def test_auto_detect_dynamic_empty_root(self):
+        html = "<html><body><div id=\"root\"></div><p>Some small footer text</p></body></html>"
+        assert is_dynamic_page(html) is True
+
+    def test_auto_detect_dynamic_noscript(self):
+        html = "<html><body><noscript>Please enable JavaScript to view this page.</noscript><div id=\"app\"></div></body></html>"
+        assert is_dynamic_page(html) is True
+
+class TestStaticScraperCleanHTML:
+    def test_clean_html_removes_scripts(self):
+        html = "<html><body><script>alert(1)</script><p>Job 1</p></body></html>"
+        cleaned = clean_html(html)
+        assert "alert(1)" not in cleaned
+        assert "Job 1" in cleaned
+
+    def test_clean_html_formats_links(self):
+        html = "<html><body><a href=\"/jobs/1\">Software Engineer</a></body></html>"
+        cleaned = clean_html(html)
+        assert "Software Engineer [Link: /jobs/1]" in cleaned
+
+class TestGenericScraperMockLLM:
+    @patch("src.scrapers.static_scraper.get_llm_client")
+    def test_static_scraper_extraction(self, mock_get_llm_client):
+        mock_client = MagicMock()
+        mock_client.extract.return_value = [
+            {"title": "Backend Dev", "location": "NYC", "url": "https://example.com/b"}
+        ]
+        mock_get_llm_client.return_value = mock_client
+        
+        scraper = GenericScraper("https://example.com/careers")
+        jobs = scraper.scrape_from_html("<html><body>Static Jobs</body></html>")
+        
+        assert len(jobs) == 1
+        assert jobs[0].title == "Backend Dev"
+        assert jobs[0].company == "example"
+        assert jobs[0].location == "NYC"
