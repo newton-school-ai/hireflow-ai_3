@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     ollama_model: str = "llama3"
 
     allowed_origins: str = Field(default="http://localhost:3000")
+    spam_filter_threshold: float = 0.7
 
     model_config = SettingsConfigDict(
         env_file=".env",
