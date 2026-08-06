@@ -24,6 +24,8 @@ class Settings(BaseSettings):
 
     allowed_origins: str = Field(default="http://localhost:3000")
     spam_filter_threshold: float = 0.7
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    faiss_index_path: str = "data/faiss_index"
 
     model_config = SettingsConfigDict(
         env_file=".env",
