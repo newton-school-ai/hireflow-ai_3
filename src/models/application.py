@@ -8,6 +8,8 @@ from src.config.database import Base
 
 class ApplicationStatus(str, enum.Enum):
     pending = "pending"
+    planned = "planned"
+    confirmed = "confirmed"
     applied = "applied"
     rejected = "rejected"
     interview = "interview"
