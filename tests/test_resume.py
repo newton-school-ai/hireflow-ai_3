@@ -62,7 +62,7 @@ def test_resume_formatting_and_summary_tone(mock_db_session, mock_llm_client):
     assert "enthusiasm" in called_prompt.lower()
 
 
-def test_hallucination_checker(mock_db_session):
+def test_hallucination_checker(mock_db_session, mock_llm_client):
     mock_user = MagicMock(spec=User)
     mock_user.id = 1
     mock_user.master_profile = {
