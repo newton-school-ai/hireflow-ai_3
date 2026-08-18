@@ -1,0 +1,90 @@
+% ============================================================
+% HireFlow — ATS-Optimised LaTeX Resume Template
+% Compiled with: xelatex
+% Variables injected by pdf_generator.py via string substitution
+% ============================================================
+
+\documentclass[10pt,a4paper]{article}
+
+% ---------- Encoding & Fonts ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}          % ATS-safe scalable font
+
+% ---------- Page Layout ----------
+\usepackage[
+    top=1.8cm,
+    bottom=1.8cm,
+    left=2cm,
+    right=2cm,
+    includeheadfoot
+]{geometry}
+
+% ---------- Colour ----------
+\usepackage[dvipsnames]{xcolor}
+\definecolor{accent}{RGB}{30, 80, 160}   % deep blue — ATS-neutral
+\definecolor{rule}{RGB}{180, 180, 180}
+
+% ---------- Section Formatting ----------
+\usepackage{titlesec}
+\titleformat{\section}
+    {\large\bfseries\color{accent}}
+    {}{0em}
+    {}
+    [\color{rule}\titlerule]
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+
+% ---------- Lists ----------
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.4em, itemsep=1pt, topsep=2pt, parsep=0pt}
+
+% ---------- Links ----------
+\usepackage[
+    colorlinks=false,
+    hidelinks
+]{hyperref}
+
+% ---------- Misc ----------
+\usepackage{parskip}
+\setlength{\parskip}{2pt}
+\pagestyle{empty}             % no page numbers
+
+% ============================================================
+\begin{document}
+
+% -------------------- HEADER --------------------
+\begin{center}
+    {\LARGE\bfseries $name}\\[4pt]
+    \small
+    $email
+    \ifx$phone\empty\else{} \textbullet{} $phone\fi
+    \ifx$location\empty\else{} \textbullet{} $location\fi
+    \ifx$linkedin\empty\else{} \textbullet{} \href{$linkedin}{LinkedIn}\fi
+    \ifx$github\empty\else{} \textbullet{} \href{$github}{GitHub}\fi
+\end{center}
+
+% -------------------- SUMMARY --------------------
+\ifx$summary\empty\else
+\section{Professional Summary}
+$summary
+\fi
+
+% -------------------- SKILLS --------------------
+\ifx$skills_line\empty\else
+\section{Technical Skills}
+$skills_line
+\fi
+
+% -------------------- EXPERIENCE --------------------
+$experience_block
+
+% -------------------- PROJECTS --------------------
+$projects_block
+
+% -------------------- EDUCATION --------------------
+$education_block
+
+% -------------------- CERTIFICATIONS --------------------
+$certifications_block
+
+\end{document}

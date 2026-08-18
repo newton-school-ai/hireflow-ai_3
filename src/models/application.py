@@ -25,6 +25,7 @@ class Application(Base):
     match_score = Column(Float, nullable=True)
     skill_gaps = Column(JSONB().with_variant(JSON(), "sqlite"), nullable=True)
     resume_path = Column(String, nullable=True)
+    resume_version = Column(Integer, nullable=True)
     status = Column(Enum(ApplicationStatus), nullable=False, default=ApplicationStatus.pending)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
